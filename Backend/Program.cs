@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -6,10 +7,19 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+=======
+using Backend.Data;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+>>>>>>> f24270aa249ea3360cb0f19000f62811df0f4e20
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+<<<<<<< HEAD
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Default");
@@ -60,6 +70,31 @@ builder.Services.AddCors(options =>
     });
 });
 
+=======
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+// Configure Database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Use Environment Variable if running in production (like Render)
+var envConnectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
+if (!string.IsNullOrEmpty(envConnectionString))
+{
+    connectionString = envConnectionString;
+}
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+>>>>>>> f24270aa249ea3360cb0f19000f62811df0f4e20
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -79,6 +114,13 @@ app.UseCors("ClientApp");
 app.UseAuthentication();
 app.UseAuthorization();
 
+<<<<<<< HEAD
+=======
+app.UseCors("AllowAll");
+
+app.UseAuthorization();
+
+>>>>>>> f24270aa249ea3360cb0f19000f62811df0f4e20
 app.MapControllers();
 
 app.Run();
