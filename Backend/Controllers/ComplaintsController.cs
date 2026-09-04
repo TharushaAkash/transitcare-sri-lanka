@@ -33,6 +33,31 @@ namespace Backend.Controllers
             return Ok(complaint);
         }
 
+
+
+        // FUNCTION 1: Submit Complaint
+        [HttpPost]
+        public async Task<ActionResult<Complaint>> CreateComplaint(CreateComplaintDto dto)
+        {
+            var complaint = new Complaint
+            {
+                ComplaintType = dto.ComplaintType,
+                RouteNumber = dto.RouteNumber,
+                Location = dto.Location,
+                ComplaintDate = dto.ComplaintDate,
+                Description = dto.Description,
+                ContactNumber = dto.ContactNumber,
+                Status = "Pending",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Complaints.Add(complaint);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetComplaint), new { id = complaint.Id }, complaint);
+        }
+
         
         // FUNCTION 3: Update Complaint Status
         [HttpPut("{id}")]
